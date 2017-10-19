@@ -4,7 +4,10 @@
 #
 # GITHUB Repository for Makegist Reddit Bot : https://github.com/hexagonist/MakegistRedditBot
 # Author : hexagonist (https://github.com/hexagonist)
-"""MIT License
+# License : MIT License
+#
+
+"""
 Copyright 2017 Hexagonist
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -37,7 +40,9 @@ def main():
     # This code runs every x minutes with cron
     # so we don't need to run it as a loop
     reddit = praw.Reddit(**credentials.reddit)
+    print "Checking mentions"
     check_mentions(reddit)
+    print "~Done~"
 
 def run_as_loop(reddit):
     """
