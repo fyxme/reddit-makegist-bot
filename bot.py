@@ -33,7 +33,7 @@ import re
 import time
 
 DEFAULT_FILENAME = "filename"
-BOT_VERSION = "0.1.0"
+BOT_VERSION = "0.1.1"
 CONTACT_USERNAME = "offdutyhuman"
 
 def main():
@@ -137,10 +137,10 @@ def get_reply(gist_id, raw_url, filename):
         "To download the file directly :",
         "    curl -L {} > {}".format(raw_url, filename),
         "----",
-        " | ".join([
+        "^( | )".join([
             "^(v.{})".format(BOT_VERSION),
-            "^(To summon me : **+/u/makegist filename.ext**)",
-            "^([Source](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489))",
+            "^(To summon me : **+/u/makegist [filename.ext]**)",
+            "[^Source](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489)",
             "[^Contact](http://www.reddit.com/r/{})".format(CONTACT_USERNAME)])])
 
 def check_mentions(reddit):

@@ -6,6 +6,12 @@ This is especially useful in subreddits such as [/r/dailyprogrammer](https://www
 
 To summon the bot, reply to a comment which has code in it with : _**+/u/makegist [filename.ext]**_ where _filename_ is the name you want to give to the gist file and _ext_ the extension.
 
+Todo
+----
+* Add own comment conversion
+* Add multi file support
+* ...
+
 ## The bot in action
 
 To view examples of the bot, simply checkout his user profile. ([/u/makegist](https://www.reddit.com/user/makegist))
