@@ -1,3 +1,4 @@
 *.pyc
 credentials.py
 .DS_Store
+out.log
