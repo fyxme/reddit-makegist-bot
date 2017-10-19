@@ -1,6 +1,6 @@
 reddit = dict(
-    client_id="",
-    client_secret="",
-    username="",
-    password="",
+    client_id="<your_client_id>",
+    client_secret="<your_client_secret>",
+    username="<your_username>",
+    password="<your_password>",
     user_agent="Gist Creation Bot (by /u/OffDutyHuman)")
