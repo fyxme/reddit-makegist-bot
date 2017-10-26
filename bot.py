@@ -23,7 +23,7 @@ import re
 import time
 
 DEFAULT_FILENAME = "filename"
-BOT_VERSION = "0.1.1"
+BOT_VERSION = "0.1.2"
 CONTACT_USERNAME = "offdutyhuman"
 
 def main():
@@ -86,14 +86,12 @@ def is_valid_mention(mention):
     """
         Check that the submission follows these:
             - not an old mention
-            - can't be a root comment since it would mean no parent comment
             - check that the formatting is correct
                 aka they're not just mentioning in a random comment
     """
     return (isinstance(mention, Comment)
         and mention.new
-        and not mention.is_root
-        and re.search(r"^(?:\+/u/makegist)", mention.body))
+        and re.search(r"(?:\+/u/makegist)", mention.body))
 
 def is_valid_filename(name):
     """
@@ -119,6 +117,7 @@ def get_reply(gist_id, raw_url, filename):
         Get the reply message for a mention
     """
     return "\n\n".join([
+        "**&#x2757; Make sure you understand what it does before running code from a stranger on the internet &#x2757;**",
         "Here is your gist : [https://gist.github.com/{}](https://gist.github.com/{})".format(gist_id,gist_id),
         "----",
         "To clone the gist repo :",
@@ -128,7 +127,7 @@ def get_reply(gist_id, raw_url, filename):
         "    curl -L {} > {}".format(raw_url, filename),
         "----",
         "^( | )".join([
-            "^(v.{})".format(BOT_VERSION),
+            "^(&#x1F916; v.{})".format(BOT_VERSION),
             "^(To summon me : **+/u/makegist [filename.ext]**)",
             "[^Source](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489)",
             "[^Contact](http://www.reddit.com/r/{})".format(CONTACT_USERNAME)])])
@@ -140,11 +139,15 @@ def check_mentions(reddit):
     valid_mentions = [mention for mention in reddit.inbox.mentions() if is_valid_mention(mention)]
 
     for valid_mention in valid_mentions:
-        comment = valid_mention.parent()
+        # check if there is a codeblock in the current comment
+        codeblock = parse_code(valid_mention.body)
+
+        if not codeblock and not valid_mention.is_root:
+            # if no code in comment and is not root comment -> check the parent
+            codeblock = parse_code(valid_mention.parent().body)
 
         # parse the comment arguments
         filename = get_mention_args(valid_mention.body)
-        codeblock = parse_code(comment.body)
 
         # make sure we were able to retrieve code in the comment
         if codeblock:
