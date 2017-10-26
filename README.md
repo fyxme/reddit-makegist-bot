@@ -4,11 +4,12 @@ Makegist Reddit Bot [/u/makegist](https://www.reddit.com/user/makegist) is a Red
 
 This is especially useful in subreddits such as [/r/dailyprogrammer](https://www.reddit.com/r/dailyprogrammer/) which have a lot of code samples which you might want to test.
 
-To summon the bot, reply to a comment which has code in it with : _**+/u/makegist [filename.ext]**_ where _filename_ is the name you want to give to the gist file and _ext_ the extension.
+To summon the bot, add a line to your own comment or reply to a comment which has code in it : _**+/u/makegist [filename.ext]**_ where _filename_ is the name you want to give to the gist file and _ext_ the extension.
 
 Todo
 ----
-* Add own comment conversion
+* ✅ ~~Add own comment conversion~~
+* Add update and delete/remove actions
 * Add multi file support
 * ...
 
