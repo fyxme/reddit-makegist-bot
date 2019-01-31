@@ -24,7 +24,7 @@ import time
 
 DEFAULT_FILENAME = "filename"
 BOT_VERSION = "0.1.2"
-CONTACT_USERNAME = "offdutyhuman"
+CONTACT_USERNAME = "makegist"
 
 def main():
     # This code runs every x minutes with cron
