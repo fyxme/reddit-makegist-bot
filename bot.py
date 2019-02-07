@@ -25,8 +25,9 @@ import re
 import time
 
 DEFAULT_FILENAME = "filename"
-BOT_VERSION = "0.1.3"
-CONTACT_USERNAME = "OffDutyHuman"
+BOT_VERSION = "0.1.4"
+ISSUES_URL = "https://github.com/hexagonist/MakegistRedditBot/issues"
+SOURCE_URL = "https://github.com/hexagonist/MakegistRedditBot/"
 
 def main():
     # This code runs every x minutes with cron
@@ -116,6 +117,9 @@ def get_mention_args(body):
     matches = re.findall(regex, body, re.MULTILINE)
     return matches[0] if matches and is_valid_filename(matches[0]) else DEFAULT_FILENAME
 
+def generate_code_block(lines):
+    return "\n".join(["    {}".format(line) for line in lines])
+
 def get_reply(gist_id, raw_url, filename):
     """
         Get the reply message for a mention
@@ -124,17 +128,20 @@ def get_reply(gist_id, raw_url, filename):
         "**&#x2757; Don't run code you don't understand**",
         "[Github Gist](https://gist.github.com/{})".format(gist_id),
         "----",
-        "    # To clone the gist repo :",
-        "    git clone https://gist.github.com/{}.git out_folder".format(gist_id),
+        generate_code_block([
+            "# Clone the gist repo and rename the folder as out_folder",
+            "git clone https://gist.github.com/{}.git out_folder".format(gist_id)]),
         "----",
-        "    # To download the file directly :",
-        "    wget -O {} {}".format(filename, raw_url),
+        generate_code_block([
+            "# To download the file directly :",
+            "wget -O {} {}".format(filename, raw_url)]),
         "----",
         "^( | )".join([
             "^(&#x1F916; v.{})".format(BOT_VERSION),
+            "^(Only works with multi-line code syntax)",
             "^(To summon me : **+/u^/makegist [filename.ext]**)",
-            "[^(Source)](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489)",
-            "[^(Contact)](http://www.reddit.com/r/{})".format(CONTACT_USERNAME)])])
+            "[^(Source)]({})".format(SOURCE_URL),
+            "[^(Issues/Suggestions)]()".format(ISSUES_URL)])])
 
 def check_mentions(reddit):
     """
