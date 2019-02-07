@@ -1,6 +1,6 @@
 # Makegist Reddit Bot
 
-Makegist Reddit Bot [/u/makegist](https://www.reddit.com/user/makegist) is a Reddit Bot which allows users to create Github gists from a Reddit Comment. This allows you to easily download the code as a gist file directly from your terminal.
+Makegist Reddit Bot [/u/makegist](https://www.reddit.com/user/makegist) is a Reddit Bot which allows users to create Github gists from a Reddit Comment. This allows anyone to easily download the code as a gist file directly from your terminal.
 
 This is especially useful in subreddits such as [/r/dailyprogrammer](https://www.reddit.com/r/dailyprogrammer/) which have a lot of code samples which you might want to test.
 
@@ -8,10 +8,8 @@ To summon the bot, add a line to your own comment or reply to a comment which ha
 
 Todo
 ----
-* ✅ ~~Add own comment conversion~~
 * Add update and delete/remove actions
 * Add multi file support
-* ...
 
 ## The bot in action
 

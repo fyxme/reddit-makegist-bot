@@ -9,10 +9,12 @@
 
 import sys
 
-if sys.version_info[0] >= 3:
-    from urllib.request import urlopen
-else:
-    from urllib import urlopen
+# if sys.version_info[0] >= 3:
+#     from urllib.request import urlopen
+# else:
+#     from urllib import urlopen
+
+import urllib2
 
 import json
 import praw
@@ -23,8 +25,8 @@ import re
 import time
 
 DEFAULT_FILENAME = "filename"
-BOT_VERSION = "0.1.2"
-CONTACT_USERNAME = "makegist"
+BOT_VERSION = "0.1.3"
+CONTACT_USERNAME = "OffDutyHuman"
 
 def main():
     # This code runs every x minutes with cron
@@ -32,7 +34,6 @@ def main():
     reddit = praw.Reddit(**credentials.reddit)
     print "Checking mentions"
     check_mentions(reddit)
-    print "~Done~"
 
 def run_as_loop(reddit):
     """
@@ -57,13 +58,16 @@ def parse_code(body):
     # remove leading 4 spaces used to create code blocks in reddit comments
     return re.sub(r"^    ", "", matches[0].strip('\r\n'), flags=re.M) if matches else ""
 
-def upload_gist(data):
+def upload_gist(data, auth_token):
     """
         Attempt to create a new github gist with the supplied data
     """
     print('Uploading gist')
     url = 'https://api.github.com/gists'
-    response = urlopen(url, data=data)
+    req = urllib2.Request(url)
+    req.add_header('Authorization', "token {}".format(auth_token))
+
+    response = urllib2.urlopen(req, data=data)
     code = response.getcode()
 
     if code != 201:
@@ -71,12 +75,12 @@ def upload_gist(data):
 
     return json.loads(response.read())
 
-def make_gist(files, description="", public=True):
+def make_gist(files, auth_token, description=""):
     """
         Make a gist from the supplied arguments
     """
     data = json.dumps(files).encode('utf-8')
-    data = upload_gist(data)
+    data = upload_gist(data, auth_token)
 
     # Id represents the id of the gist
     # and files represents the meta-data for the files in this gist
@@ -91,7 +95,7 @@ def is_valid_mention(mention):
     """
     return (isinstance(mention, Comment)
         and mention.new
-        and re.search(r"(?:\+/u/makegist)", mention.body))
+        and "+/u/makegist" in mention.body)
 
 def is_valid_filename(name):
     """
@@ -117,8 +121,8 @@ def get_reply(gist_id, raw_url, filename):
         Get the reply message for a mention
     """
     return "\n\n".join([
-        "**&#x2757; Make sure you understand what it does before running code from a stranger on the internet &#x2757;**",
-        "Here is your gist : [https://gist.github.com/{}](https://gist.github.com/{})".format(gist_id,gist_id),
+        "**&#x2757; Don't run code you don't understand**",
+        "[Github Gist](https://gist.github.com/{})".format(gist_id),
         "----",
         "To clone the gist repo :",
         "    git clone https://gist.github.com/{}.git out_folder".format(gist_id),
@@ -128,9 +132,9 @@ def get_reply(gist_id, raw_url, filename):
         "----",
         "^( | )".join([
             "^(&#x1F916; v.{})".format(BOT_VERSION),
-            "^(To summon me : **+/u/makegist [filename.ext]**)",
-            "[^Source](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489)",
-            "[^Contact](http://www.reddit.com/r/{})".format(CONTACT_USERNAME)])])
+            "^(To summon me : **+/u^/makegist [filename.ext]**)",
+            "[^(Source)](https://gist.github.com/hexagonist/33d4501f64d7a097d2b243fc67f0f489)",
+            "[^(Contact)](http://www.reddit.com/r/{})".format(CONTACT_USERNAME)])])
 
 def check_mentions(reddit):
     """
@@ -157,10 +161,11 @@ def check_mentions(reddit):
                     filename : {
                         "content" : codeblock
                     }
-                }
+                },
+                "public" : "true"
             }
             try:
-                gist_id, files = make_gist(files)
+                gist_id, files = make_gist(files, credentials.github_token)
             except ValueError as e:
                 print e
                 print "Error with : {}".format(valid_mention.id)
