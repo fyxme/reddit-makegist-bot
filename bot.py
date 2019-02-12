@@ -141,7 +141,7 @@ def get_reply(gist_id, raw_url, filename):
             "^(Only works with multi-line code syntax)",
             "^(To summon me : **+/u^/makegist [filename.ext]**)",
             "[^(Source)]({})".format(SOURCE_URL),
-            "[^(Issues/Suggestions)]()".format(ISSUES_URL)])])
+            "[^(Issues/Suggestions)]({})".format(ISSUES_URL)])])
 
 def check_mentions(reddit):
     """
